@@ -15,17 +15,68 @@ export default class NewBill {
     this.billId = null
     new Logout({ document, localStorage, onNavigate })
   }
+
+  // _isValidFileType(input) {
+  // let regex = /(png|jpg|jpe?g)$/i;
+  // return regex.test(input)
+  //   // return (/(png|jpg|jpe?g)$/i).test(e);
+  // }
+
+  // handleChangeFile = e => {
+  //   e.preventDefault()
+  //   const file = this.document.querySelector(`input[data-testid="file"]`).files[0];
+  //   const errorFileTypeMsg = this.document.getElementsByClassName("msg__error--filetype")[0];
+  //   const filePath = e.target.value.split(/\\/g);
+  //   const fileName = filePath[filePath.length-1];
+  //   const formData = new FormData();
+  //   const email = JSON.parse(localStorage.getItem("user")).email;
+  //   formData.append('file', file);
+  //   formData.append('email', email);
+
+  //    if (this._isValidFileType(file.type) === true) {
+  //     console.log('handleChangeFile etarget value if', e.target.value);
+  //     errorFileTypeMsg.classList.add("hidden")
+  //     this.store
+  //     .bills()
+  //     .create({
+  //       data: formData,
+  //       headers: {
+  //         noContentType: true
+  //       }
+  //     })
+  //     .then(({fileUrl, key}) => {
+  //       console.log(fileUrl)
+  //       this.billId = key
+  //       this.fileUrl = fileUrl
+  //       this.fileName = fileName
+  //     }).catch(error => console.error(error))
+  //   } else {
+  //     console.log('handleChangeFile etarget value else', e.target.value);
+  //     e.target.value = "";
+  //     errorFileTypeMsg.classList.remove("hidden")
+  //   }
+
+  // }
+
   handleChangeFile = e => {
     e.preventDefault()
-    const file = this.document.querySelector(`input[data-testid="file"]`).files[0]
-    const filePath = e.target.value.split(/\\/g)
-    const fileName = filePath[filePath.length-1]
-    const formData = new FormData()
-    const email = JSON.parse(localStorage.getItem("user")).email
-    formData.append('file', file)
-    formData.append('email', email)
+    const file = this.document.querySelector(`input[data-testid="file"]`).files[0];
+    const errorFileTypeMsg = this.document.getElementsByClassName("msg__error--filetype")[0];
+    const filePath = e.target.value.split(/\\/g);
+    const fileName = filePath[filePath.length-1];
+    const formData = new FormData();
+    const email = JSON.parse(localStorage.getItem("user")).email;
+    formData.append('file', file);
+    formData.append('email', email);
 
-    this.store
+    // let regex = new RegExp(`(jpg|jpeg|png)`, "i");
+    let regex = new RegExp(/(png|jpg|jpe?g)$/i);
+    const isValidFileType = regex.test(file.type);
+
+     if (isValidFileType === true) {
+      console.log('handleChangeFile etarget value if', e.target.value);
+      errorFileTypeMsg.classList.add("hidden")
+      this.store
       .bills()
       .create({
         data: formData,
@@ -39,6 +90,12 @@ export default class NewBill {
         this.fileUrl = fileUrl
         this.fileName = fileName
       }).catch(error => console.error(error))
+    } else {
+      console.log('handleChangeFile etarget value else', e.target.value);
+      e.target.value = "";
+      errorFileTypeMsg.classList.remove("hidden")
+    }
+
   }
   handleSubmit = e => {
     e.preventDefault()
