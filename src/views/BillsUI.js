@@ -4,7 +4,7 @@ import LoadingPage from "./LoadingPage.js"
 import Actions from './Actions.js'
 
 const row = (bill) => {
-  console.log('bill', bill);
+  // console.log('bill', bill);
   return `
     <tr>
       <td>${bill.type}</td>
@@ -18,10 +18,11 @@ const row = (bill) => {
     </tr>
     `;
   };
-
-/// [Bug report] - Bills : Le test Bills / les notes de frais s'affichent par ordre décroissant est passé au rouge. ///
+/////////////////////////////////////////////////////////////////////////
+// [Bug report] - Bills : Le test Bills / les notes de frais s'affichent par ordre décroissant est passé au rouge.
+/////////////////////////////////////////////////////////////////////////
 const rows = (data) => {
-  // console.log('1 - billsUI rows data', data);
+  console.log('1 - billsUI rows data', data.date);
   return data && data.length ? data
   //.sort((a,b) => {return ((a.date < b.date) ? 1 : -1 )})
   .sort((a, b) => new Date(b.date) - new Date(a.date))

@@ -55,7 +55,9 @@ export default () => {
                   </div>
                   <div class="col-half">
                     <label for="file" class="bold-label">Justificatif</label>
-                    <input required type="file" class="form-control blue-border" data-testid="file" />
+                    <!--https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/file-->
+                    <input required type="file" class="form-control blue-border" data-testid="file" accept="image/jpg, image/jpeg, image/png"/>
+                    <div class="msg__error--filetype" data-testid="message_file_type_error">L'extension du fichier n'est pas supporté - Merci de choisir un fichier du type <i>mon_fichier</i><b>.jpg</b>, <i>mon_fichier</i><b>.jpeg</b>, <i>mon_fichier</i><b>.png</b>.</div>
                   </div>
                 </div>
             </div>

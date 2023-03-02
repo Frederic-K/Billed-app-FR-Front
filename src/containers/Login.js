@@ -14,7 +14,7 @@ export default class Login {
     formEmployee.addEventListener("submit", this.handleSubmitEmployee)
     const formAdmin = this.document.querySelector(`form[data-testid="form-admin"]`)
     formAdmin.addEventListener("submit", this.handleSubmitAdmin)
-  }
+  };
   handleSubmitEmployee = e => {
     e.preventDefault()
     const user = {
@@ -34,15 +34,19 @@ export default class Login {
         PREVIOUS_LOCATION = this.PREVIOUS_LOCATION
         this.document.body.style.backgroundColor="#fff"
       })
-
   }
 
+/////////////////////////////////////////////////////////////////////////
+// [Bug report] - Bills : Dans le rapport de test "Login, si un administrateur remplit correctement les champs du Login, il devrait naviguer sur la page Dashboard", le test est passé au rouge (cf. copie d'écran).
+/////////////////////////////////////////////////////////////////////////
   handleSubmitAdmin = e => {
     e.preventDefault()
     const user = {
       type: "Admin",
-      email: e.target.querySelector(`input[data-testid="employee-email-input"]`).value,
-      password: e.target.querySelector(`input[data-testid="employee-password-input"]`).value,
+      // email: e.target.querySelector(`input[data-testid="employee-email-input"]`).value,
+      // password: e.target.querySelector(`input[data-testid="employee-password-input"]`).value,
+      email: e.target.querySelector(`input[data-testid="admin-email-input"]`).value,
+      password: e.target.querySelector(`input[data-testid="admin-password-input"]`).value,
       status: "connected"
     }
     this.localStorage.setItem("user", JSON.stringify(user))
@@ -56,7 +60,7 @@ export default class Login {
         PREVIOUS_LOCATION = this.PREVIOUS_LOCATION
         document.body.style.backgroundColor="#fff"
       })
-  }
+  };
 
   // not need to cover this function by tests
   login = (user) => {
@@ -71,7 +75,7 @@ export default class Login {
     } else {
       return null
     }
-  }
+  };
 
   // not need to cover this function by tests
   createUser = (user) => {
@@ -91,5 +95,5 @@ export default class Login {
     } else {
       return null
     }
-  }
-}
+  };
+};
