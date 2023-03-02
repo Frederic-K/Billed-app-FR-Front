@@ -16,6 +16,9 @@ export default class NewBill {
     new Logout({ document, localStorage, onNavigate })
   }
 
+/////////////////////////////////////////////////////////////////////////
+// [Bug Hunt] - Bills :  empêcher la saisie d'un document qui a une extension différente de jpg, jpeg ou png au niveau du formulaire du fichier NewBill.js.
+/////////////////////////////////////////////////////////////////////////
   // _isValidFileType(input) {
   // let regex = /(png|jpg|jpe?g)$/i;
   // return regex.test(input)
@@ -58,6 +61,44 @@ export default class NewBill {
 
   // }
 
+  // handleChangeFile = e => {
+  //   e.preventDefault()
+  //   const file = this.document.querySelector(`input[data-testid="file"]`).files[0];
+  //   const errorFileTypeMsg = this.document.getElementsByClassName("msg__error--filetype")[0];
+  //   const filePath = e.target.value.split(/\\/g);
+  //   const fileName = filePath[filePath.length-1];
+  //   const formData = new FormData();
+  //   const email = JSON.parse(localStorage.getItem("user")).email;
+  //   formData.append('file', file);
+  //   formData.append('email', email);
+
+  //   let regex = new RegExp(/(png|jpg|jpe?g)$/i);
+  //   const isValidFileType = regex.test(file.type);
+
+  //    if (isValidFileType === true) {
+  //     console.log('handleChangeFile etarget value if', e.target.value);
+  //     errorFileTypeMsg.classList.add("hidden")
+  //     this.store
+  //     .bills()
+  //     .create({
+  //       data: formData,
+  //       headers: {
+  //         noContentType: true
+  //       }
+  //     })
+  //     .then(({fileUrl, key}) => {
+  //       console.log(fileUrl)
+  //       this.billId = key
+  //       this.fileUrl = fileUrl
+  //       this.fileName = fileName
+  //     }).catch(error => console.error(error))
+  //   } else {
+  //     console.log('handleChangeFile etarget value else', e.target.value);
+  //     e.target.value = "";
+  //     errorFileTypeMsg.classList.remove("hidden")
+  //   }
+  // }
+
   handleChangeFile = e => {
     e.preventDefault()
     const file = this.document.querySelector(`input[data-testid="file"]`).files[0];
@@ -69,11 +110,7 @@ export default class NewBill {
     formData.append('file', file);
     formData.append('email', email);
 
-    // let regex = new RegExp(`(jpg|jpeg|png)`, "i");
-    let regex = new RegExp(/(png|jpg|jpe?g)$/i);
-    const isValidFileType = regex.test(file.type);
-
-     if (isValidFileType === true) {
+     if ((file && file.type === "image/png") || file.type === "image/jpg" || file.type === "image/jpeg") {
       console.log('handleChangeFile etarget value if', e.target.value);
       errorFileTypeMsg.classList.add("hidden")
       this.store
@@ -95,8 +132,8 @@ export default class NewBill {
       e.target.value = "";
       errorFileTypeMsg.classList.remove("hidden")
     }
-
   }
+
   handleSubmit = e => {
     e.preventDefault()
     console.log('e.target.querySelector(`input[data-testid="datepicker"]`).value', e.target.querySelector(`input[data-testid="datepicker"]`).value)
