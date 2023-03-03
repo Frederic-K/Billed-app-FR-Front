@@ -19,6 +19,7 @@ export default class NewBill {
 /////////////////////////////////////////////////////////////////////////
 // [Bug Hunt] - Bills :  empêcher la saisie d'un document qui a une extension différente de jpg, jpeg ou png au niveau du formulaire du fichier NewBill.js.
 /////////////////////////////////////////////////////////////////////////
+
   // _isValidFileType(input) {
   // let regex = /(png|jpg|jpe?g)$/i;
   // return regex.test(input)
@@ -99,20 +100,70 @@ export default class NewBill {
   //   }
   // }
 
+  // handleChangeFile = e => {
+  //   e.preventDefault()
+  //   const file = this.document.querySelector(`input[data-testid="file"]`).files[0];
+  //   const errorFileTypeMsg = this.document.getElementsByClassName("msg__error--filetype")[0];
+  //   const filePath = e.target.value.split(/\\/g);
+  //   const fileName = filePath[filePath.length-1];
+  //   const formData = new FormData();
+  //   const email = JSON.parse(localStorage.getItem("user")).email;
+  //   formData.append('file', file);
+  //   formData.append('email', email);
+  //    if ((file && file.type === "image/png") || file.type === "image/jpg" || file.type === "image/jpeg") {
+  //     console.log('handleChangeFile etarget value if', e.target.value);
+  //     errorFileTypeMsg.classList.add("hidden")
+  //     this.store
+  //     .bills()
+  //     .create({
+  //       data: formData,
+  //       headers: {
+  //         noContentType: true
+  //       }
+  //     })
+  //     .then(({fileUrl, key}) => {
+  //       console.log(fileUrl)
+  //       this.billId = key
+  //       this.fileUrl = fileUrl
+  //       this.fileName = fileName
+  //     }).catch(error => console.error(error))
+  //   } else {
+  //     console.log('handleChangeFile etarget value else', e.target.value);
+  //     e.target.value = "";
+  //     errorFileTypeMsg.classList.remove("hidden")
+  //   }
+  // }
+
+
+/////////////////////////////////////////////////////////////////////////
+// [Bug Hunt] - Bills :  empêcher la saisie d'un document qui a une extension différente de jpg, jpeg ou png au niveau du formulaire du fichier NewBill.js.
+/////////////////////////////////////////////////////////////////////////
   handleChangeFile = e => {
     e.preventDefault()
     const file = this.document.querySelector(`input[data-testid="file"]`).files[0];
-    const errorFileTypeMsg = this.document.getElementsByClassName("msg__error--filetype")[0];
     const filePath = e.target.value.split(/\\/g);
     const fileName = filePath[filePath.length-1];
+    console.log('handleChangeFile fileName', fileName);
     const formData = new FormData();
     const email = JSON.parse(localStorage.getItem("user")).email;
     formData.append('file', file);
     formData.append('email', email);
 
-     if ((file && file.type === "image/png") || file.type === "image/jpg" || file.type === "image/jpeg") {
-      console.log('handleChangeFile etarget value if', e.target.value);
-      errorFileTypeMsg.classList.add("hidden")
+    const errorFileTypeMsg = this.document.getElementsByClassName("msg__error--filetype")[0];
+
+    const fileType = fileName.split(".").pop();
+    const isValidFileType = ["png", "jpg", "jpeg"];
+
+    // if (!isValidFileType.includes(fileType)) {
+    //   alert("L'extension du fichier n'est pas supporté - Merci de choisir un fichier du type mon_fichier.jpg / mon_fichier.jpeg /  mon_fichier.png");
+    //   e.target.value = "";
+    // }
+
+    if (!isValidFileType.includes(fileType)) {
+      e.target.value = "";
+      errorFileTypeMsg.classList.remove("hidden");
+    } else {
+      errorFileTypeMsg.classList.add("hidden");
       this.store
       .bills()
       .create({
@@ -127,12 +178,8 @@ export default class NewBill {
         this.fileUrl = fileUrl
         this.fileName = fileName
       }).catch(error => console.error(error))
-    } else {
-      console.log('handleChangeFile etarget value else', e.target.value);
-      e.target.value = "";
-      errorFileTypeMsg.classList.remove("hidden")
     }
-  }
+  };
 
   handleSubmit = e => {
     e.preventDefault()
