@@ -25,8 +25,11 @@ describe("Given I am connected as an employee", () => {
       window.onNavigate(ROUTES_PATH.Bills)
       await waitFor(() => screen.getByTestId('icon-window'))
       const windowIcon = screen.getByTestId('icon-window')
+      /////////////////////////////////////////////////////////////////////////
+      // [Ajout de tests unitaires et d'intégration] : il manque la mention “expect”
+      /////////////////////////////////////////////////////////////////////////
       //to-do write expect expression
-      
+      expect(windowIcon).toHaveClass("active-icon");
 
     })
     test("Then bills should be ordered from earliest to latest", () => {
@@ -37,4 +40,10 @@ describe("Given I am connected as an employee", () => {
       expect(dates).toEqual(datesSorted)
     })
   })
-})
+});
+
+      /////////////////////////////////////////////////////////////////////////
+      // [Ajout de tests unitaires et d'intégration]
+      /////////////////////////////////////////////////////////////////////////
+
+      
