@@ -24,7 +24,6 @@ const row = (bill) => {
 const rows = (data) => {
   console.log('1 - billsUI rows data', data.date);
   return data && data.length ? data
-  //.sort((a,b) => {return ((a.date < b.date) ? 1 : -1 )})
   .sort((a, b) => new Date(b.date) - new Date(a.date))
   .map(bill => row(bill)).join("") : "";
 };

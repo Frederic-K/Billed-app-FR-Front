@@ -144,10 +144,20 @@ export default class {
         .html("")
       this.counter ++
     }
+    // bills.forEach(bill => {
+    //   $(`#open-bill${bill.id}`).click((e) => this.handleEditTicket(e, bill, bills))
+    // });
+
+    /////////////////////////////////////////////////////////////////////////
+    // [Bug Hunt] - Dashboard : pourvoir déplier plusieurs listes, et consulter les tickets de chacune des deux listes.
+    /////////////////////////////////////////////////////////////////////////
+
+    /// http://api.jquery.com/off/
+    /// http://api.jquery.com/on/
 
     bills.forEach(bill => {
-      $(`#open-bill${bill.id}`).click((e) => this.handleEditTicket(e, bill, bills))
-    })
+      $(`#open-bill${bill.id}`).off().on("click",((e) => this.handleEditTicket(e, bill, bills)));
+    });
 
     return bills
 
