@@ -64,7 +64,7 @@ describe("Given I am connected as an employee", () => {
 describe("When i click on the icon eye", () => {
   test("a modal should open displaying the invoice receipt", () => {
 
-    $.fn.modal = jest.fn();
+    $.fn.modal = jest.fn(); /// https://stackoverflow.com/questions/45225235/accessing-bootstrap-functionality-in-jest-testing
 
     const onNavigate = (pathname) => {
       document.body.innerHTML = ROUTES({ pathname })
