@@ -36,9 +36,9 @@ describe("Given I am connected as an employee", () => {
       window.onNavigate(ROUTES_PATH.Bills);
       await waitFor(() => screen.getByTestId('icon-window'));
       const windowIcon = screen.getByTestId('icon-window');
-      /////////////////////////////////////////////////////////////////////////
-      // [Ajout de tests unitaires et d'intégration] : il manque la mention “expect”
-      /////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////
+// [Ajout de tests unitaires et d'intégration] : il manque la mention “expect”
+/////////////////////////////////////////////////////////////////////////
       // expect(windowIcon).toHaveClass("active-icon");
       expect(windowIcon.className).toBe("active-icon");
 
@@ -53,50 +53,50 @@ describe("Given I am connected as an employee", () => {
   });
 });
 
-      /////////////////////////////////////////////////////////////////////////
-      // [Ajout de tests unitaires et d'intégration]
-      /////////////////////////////////////////////////////////////////////////
-
-      /////////////////////////////////////////////////////////////////////////
-      // [Test new Bill]
-      /////////////////////////////////////////////////////////////////////////
-      
-// describe("When i click on new bill button", () => {
-//   test("Then new bill modal should be display", () => {
-
-//     const onNavigate = (pathname) => {
-//       document.body.innerHTML = ROUTES({ pathname });
-//     };
-
-//     Object.defineProperty(window, 'localStorage', { value: localStorageMock });
-//     window.localStorage.setItem('user', JSON.stringify({
-//       type: 'Employee'
-//     }));
-
-//     const bill = new Bills({
-//       document, onNavigate, store: null, bills:bills, localStorage: window.localStorage
-//     });
-
-//     document.body.innerHTML = BillsUI({ data: { bills } });
-
-//     const handelShowNewBill = jest.fn((e) => bill.handelShowNewBill(e));
-
-//     const btnNewBill = screen.getByTestId("btn-new-bill");
-
-//     btnNewBill.addEventListener("click", handelShowNewBill);
-
-//     userEvent.click(btnNewBill);
-
-//     expect(handelShowNewBill).toHaveBeenCalled();
-//     // expect(screen.getByTestId("sendbillform")).toBeTruthy();
-//     expect(screen.getByText("Envoyer une note de frais")).toBeTruthy();
-//     expect(screen.getByTestId("form-new-bill")).toBeTruthy();
-//   });
-// });
+/////////////////////////////////////////////////////////////////////////
+// [Ajout de tests unitaires et d'intégration]
+/////////////////////////////////////////////////////////////////////////
 
 /////////////////////////////////////////////////////////////////////////
-      // [Test d'intégration GET Bills]
-      /////////////////////////////////////////////////////////////////////////
+// [Test new Bill]
+/////////////////////////////////////////////////////////////////////////
+      
+describe("When i click on new bill button", () => {
+  test("Then new bill modal should be display", () => {
+
+    const onNavigate = (pathname) => {
+      document.body.innerHTML = ROUTES({ pathname });
+    };
+
+    Object.defineProperty(window, 'localStorage', { value: localStorageMock });
+    window.localStorage.setItem('user', JSON.stringify({
+      type: 'Employee'
+    }));
+
+    const bill = new Bills({
+      document, onNavigate, store: null, bills:bills, localStorage: window.localStorage
+    });
+
+    document.body.innerHTML = BillsUI({ data: { bills } });
+
+    const handelShowNewBill = jest.fn((e) => bill.handleClickNewBill(e));
+
+    const btnNewBill = screen.getByTestId("btn-new-bill");
+
+    btnNewBill.addEventListener("click", handelShowNewBill);
+
+    userEvent.click(btnNewBill);
+
+    expect(handelShowNewBill).toHaveBeenCalled();
+    // expect(screen.getByTestId("sendbillform")).toBeTruthy();
+    expect(screen.getByText("Envoyer une note de frais")).toBeTruthy();
+    expect(screen.getByTestId("form-new-bill")).toBeTruthy();
+  });
+});
+
+/////////////////////////////////////////////////////////////////////////
+// [Test d'intégration GET Bills]
+/////////////////////////////////////////////////////////////////////////
       
 // describe("Given I'm a user connected as Employee", () => {
 //   describe("When i nav to Bills", () => {
