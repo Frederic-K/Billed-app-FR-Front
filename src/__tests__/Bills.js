@@ -58,6 +58,45 @@ describe("Given I am connected as an employee", () => {
 /////////////////////////////////////////////////////////////////////////
 
 /////////////////////////////////////////////////////////////////////////
+// [Test displaying Bill with eye icon]
+/////////////////////////////////////////////////////////////////////////
+
+describe("When i click on the icon eye", () => {
+  test("a modal should open displaying the invoice receipt", () => {
+
+    $.fn.modal = jest.fn();
+
+    const onNavigate = (pathname) => {
+      document.body.innerHTML = ROUTES({ pathname })
+    };
+
+    Object.defineProperty(window, 'localStorage', { value: localStorageMock });
+    window.localStorage.setItem('user', JSON.stringify({
+      type: 'Employee'
+    }));
+
+    document.body.innerHTML = BillsUI({ data: bills });
+
+    const store = mockStore;
+    const bill = new Bills({
+      document, onNavigate, store, localStorage: window.localStorage
+    });
+    
+    const iconEye = screen.getAllByTestId("icon-eye")[0];
+
+    const handelShowBillReceipt = jest.fn(bill.handleClickIconEye(iconEye))
+
+    iconEye.addEventListener("click", handelShowBillReceipt);
+
+    userEvent.click(iconEye);
+
+    expect(handelShowBillReceipt).toHaveBeenCalled();
+    // expect(screen.getByTestId("invoicereceipt")).toBeTruthy()
+    expect(screen.getByText("Justificatif")).toBeTruthy();
+  });
+});
+
+/////////////////////////////////////////////////////////////////////////
 // [Test new Bill]
 /////////////////////////////////////////////////////////////////////////
       
