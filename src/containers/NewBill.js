@@ -42,7 +42,7 @@ export default class NewBill {
      if (!this._isValidFileType(file.type)) {
       console.log('1 - file.type', file.type);
       e.target.value = "";
-      errorFileTypeMsg.classList.remove("hidden")
+      errorFileTypeMsg.classList.remove("hidden");
     } else {
       console.log('2 - file.type', file.type);
       errorFileTypeMsg.classList.add("hidden")
@@ -55,13 +55,13 @@ export default class NewBill {
         }
       })
       .then(({fileUrl, key}) => {
-        console.log(fileUrl)
         this.billId = key
         this.fileUrl = fileUrl
         this.fileName = fileName
-      }).catch(error => console.error(error))
-    }
-  }
+      }).catch(error => console.error(error));
+    };
+  };
+
   // }
   // handleChangeFile = e => {
   //   e.preventDefault()
