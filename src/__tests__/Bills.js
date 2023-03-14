@@ -78,7 +78,7 @@ describe("When im connected as an Employee", () => {
   describe('When im on Dashboard page but back-end send an error message', () => {
     test('Then, Error page should be rendered', () => {
       document.body.innerHTML = BillsUI({ error: 'some error message' });
-      // expect(screen.getAllByText("Erreur")).toBeTruthy();
+      expect(screen.getAllByText("Erreur")).toBeTruthy();
       expect(screen.getByTestId("error-message")).toBeTruthy();
     });
   });
