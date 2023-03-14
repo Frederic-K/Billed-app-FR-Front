@@ -184,18 +184,18 @@ describe("Given I'm a user connected as Employee", () => {
       //   document.body.innerHTML = ROUTES({ pathname });
       // };
 
-      const store = mockStore;
-      const bill = new Bills({
-        document, store, localStorage: window.localStorage
-      });
-      const bills = await bill.getBills();
-      expect(bills.length != 0).toBeTruthy();
-
       // const store = mockStore;
-      // const getStoreSpyOn = jest.spyOn(store, "bills"); // jest.spyOn(mockStore, "bills")
-      // const bills = await store.bills().list();
-      // expect(getStoreSpyOn).toHaveBeenCalledTimes(1);
-      // expect(bills.length).toBe(4);
+      // const bill = new Bills({
+      //   document, store, localStorage: window.localStorage
+      // });
+      // const bills = await bill.getBills();
+      // expect(bills.length != 0).toBeTruthy();
+
+      const store = mockStore;
+      const getStoreSpyOn = jest.spyOn(store, "bills"); // jest.spyOn(mockStore, "bills")
+      const bills = await store.bills().list();
+      expect(getStoreSpyOn).toHaveBeenCalledTimes(1);
+      expect(bills.length).toBe(4);
 
       await waitFor(() => screen.getByText("Mes notes de frais"));
       expect(screen.getByTestId("tbody")).toBeTruthy();
