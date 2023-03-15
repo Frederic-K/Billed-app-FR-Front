@@ -17,8 +17,9 @@ import { ROUTES, ROUTES_PATH } from "../constants/routes.js";
 import {localStorageMock} from "../__mocks__/localStorage.js";
 
 import mockStore from "../__mocks__/store";
+
 import router from "../app/Router.js";
-import store from "../__mocks__/store";
+// import store from "../__mocks__/store";
 
 jest.mock("../app/Store", () => mockStore);
 
@@ -27,28 +28,43 @@ describe("Given I am connected as an employee", () => {
     test("Then bill icon in vertical layout should be highlighted", async () => {
 
       Object.defineProperty(window, 'localStorage', { value: localStorageMock });
+
       window.localStorage.setItem('user', JSON.stringify({
         type: 'Employee'
       }));
+
       const root = document.createElement("div");
+
       root.setAttribute("id", "root");
+
       document.body.append(root);
+
       router();
+
       window.onNavigate(ROUTES_PATH.Bills);
+
       await waitFor(() => screen.getByTestId('icon-window'));
+
       const windowIcon = screen.getByTestId('icon-window');
+
 /////////////////////////////////////////////////////////////////////////
 // [Ajout de tests unitaires et d'intégration] : il manque la mention “expect”
 /////////////////////////////////////////////////////////////////////////
+
       // expect(windowIcon).toHaveClass("active-icon");
       expect(windowIcon.className).toBe("active-icon");
 
     });
+
     test("Then bills should be ordered from earliest to latest", () => {
       document.body.innerHTML = BillsUI({ data: bills })
+
       const dates = screen.getAllByText(/^(19|20)\d\d[- /.](0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])$/i).map(a => a.innerHTML);
+
       const antiChrono = (a, b) => ((a < b) ? 1 : -1);
+
       const datesSorted = [...dates].sort(antiChrono);
+
       expect(dates).toEqual(datesSorted);
     });
   });
@@ -64,9 +80,26 @@ describe("Given I am connected as an employee", () => {
 
 describe("When im connected as an Employee", () => {
   describe('When im on Dashboard page but it is loading', () => {
-    test('Then, Loading page should be rendered', () => {
+    test('Then loading page should be rendered', () => {
       document.body.innerHTML = BillsUI({ loading: true });
+
       expect(screen.getAllByText('Loading...')).toBeTruthy();
+    });
+  });
+});
+
+/////////////////////////////////////////////////////////////////////////
+// [Test Bills no bills to show on dashboard]
+/////////////////////////////////////////////////////////////////////////
+
+describe("When im connected as an Employee", () => {
+  describe("When im on Dashboard page but no bills to display", () => {
+    test("Then the action button to check the invoice receipt should not to be display", () => {
+      document.body.innerHTML = BillsUI({ data: [] });
+
+      const eyeIcon = screen.queryByTestId("icon-eye");
+
+      expect(eyeIcon).toBeNull();
     });
   });
 });
@@ -77,9 +110,11 @@ describe("When im connected as an Employee", () => {
 
 describe("When im connected as an Employee", () => {
   describe('When im on Dashboard page but back-end send an error message', () => {
-    test('Then, Error page should be rendered', () => {
+    test('Then Error page should be rendered', () => {
       document.body.innerHTML = BillsUI({ error: 'some error message' });
+
       expect(screen.getAllByText("Erreur")).toBeTruthy();
+      
       expect(screen.getByTestId("error-message")).toBeTruthy();
     });
   });
@@ -115,11 +150,11 @@ describe("When i click on the icon eye", () => {
     // iconEye.addEventListener("click", handelShowBillReceipt);
     // userEvent.click(iconEye);
 
-    const iconEyes = screen.getAllByTestId("icon-eye");
-    const handelShowBillReceipt = jest.fn((iconEye) => bill.handleClickIconEye(iconEye));
-    iconEyes.forEach((iconEye) => {
-      iconEye.addEventListener("click", handelShowBillReceipt(iconEye));
-      userEvent.click(iconEye);
+    const iconEye = screen.getAllByTestId("icon-eye");
+    const handelShowBillReceipt = jest.fn((icon) => bill.handleClickIconEye(icon));
+    if (iconEye) iconEye.forEach((icon) => {
+      icon.addEventListener("click", handelShowBillReceipt(icon));
+      userEvent.click(icon);
     });
 
     expect(handelShowBillReceipt).toHaveBeenCalled();
@@ -173,43 +208,46 @@ describe("Given I'm a user connected as Employee", () => {
   describe("When i nav to Bills", () => {
     test("Fetch bills from mock API GET", async () => {
 
-      Object.defineProperty(window, 'localStorage', { value: localStorageMock })
+      Object.defineProperty(window, 'localStorage', { value: localStorageMock });
+
       window.localStorage.setItem("user", JSON.stringify({ type: "Employee", email: "a@a" }));
+
       const root = document.createElement("div");
+
       root.setAttribute("id", "root");
+
       document.body.append(root);
+
       router();
+
       window.onNavigate(ROUTES_PATH.Bills);
       // const onNavigate = (pathname) => {
       //   document.body.innerHTML = ROUTES({ pathname });
-      // };
 
-      // const store = mockStore;
-      // const bill = new Bills({
-      //   document, store, localStorage: window.localStorage
-      // });
-      // const bills = await bill.getBills();
-      // expect(bills.length != 0).toBeTruthy();
+      const getStoreSpyOn = jest.spyOn(mockStore, "bills")
 
-      const store = mockStore;
-      const getStoreSpyOn = jest.spyOn(store, "bills"); // jest.spyOn(mockStore, "bills")
-      const bills = await store.bills().list();
+      const bills = await mockStore.bills().list();
       expect(getStoreSpyOn).toHaveBeenCalledTimes(1);
       expect(bills.length).toBe(4);
-
+    
       await waitFor(() => screen.getByText("Mes notes de frais"));
       expect(screen.getByTestId("tbody")).toBeTruthy();
-
-    });
+    });    
 
   describe("When an error occurs on API", () => {
     beforeEach(() => {
       jest.spyOn(mockStore, "bills")
+
       Object.defineProperty(window, "localStorage", { value: localStorageMock });
+
       window.localStorage.setItem('user', JSON.stringify({type: 'Employee', email: "a@a" }));
+
       const root = document.createElement("div");
+
       root.setAttribute("id", "root");
+
       document.body.appendChild(root);
+
       router();
     });
 
@@ -218,9 +256,13 @@ describe("Given I'm a user connected as Employee", () => {
         return {
           list : () =>  {return Promise.reject(new Error("Erreur 404"))},
         }})
+
       window.onNavigate(ROUTES_PATH.Bills);
+
       await new Promise(process.nextTick);
+
       const message = await screen.getByText(/Erreur 404/);
+
       expect(message).toBeTruthy();
     });
 
@@ -229,11 +271,15 @@ describe("Given I'm a user connected as Employee", () => {
         return {
           list : () =>  {return Promise.reject(new Error("Erreur 500"))},
         }});
+
       window.onNavigate(ROUTES_PATH.Bills)
+
       await new Promise(process.nextTick);
+
       const message = await screen.getByText(/Erreur 500/);
+
       expect(message).toBeTruthy()
     });
   });
   });
-});
+})
