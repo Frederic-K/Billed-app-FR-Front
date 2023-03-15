@@ -52,7 +52,7 @@ export default class {
               }
             }
           })
-          console.log('launch test')
+          // console.log('launch test')
         return bills
       })
     }
