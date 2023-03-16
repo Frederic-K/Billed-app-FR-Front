@@ -75,7 +75,40 @@ describe("Given I am connected as an employee", () => {
       const errorFileType = screen.queryByTestId("message_file_type_error");
       expect(errorFileType.getAttribute("class")).toMatch(/hidden/);
     });
-  });
+
+/////////////////////////////////////////////////////////////////////////
+// [Test NewBills submit incomplete receipt form]
+/////////////////////////////////////////////////////////////////////////  
+
+    describe("When i submit an incomplete expense report form", () => {
+      test("Thern i should stay on NewBill page", () => {
+        window.onNavigate(ROUTES_PATH.NewBill);
+
+        const newBill = new NewBill({
+          document,
+          onNavigate,
+          mockStore,
+          localStorage: window.localStorage,
+        });
+
+        expect(screen.getByTestId("expense-name").value).toBe("");
+        // expect(screen.getByTestId("datepicker").value).toBe(""); // Autocheck
+        // expect(screen.getByTestId("amount").value).toBe(""); // Autocheck
+        expect(screen.getByTestId("vat").value).toBe("");
+        // expect(screen.getByTestId("pct").value).toBe(""); // // Autocheck
+        // expect(screen.getByTestId("file").value).toBe(""); // Autocheck
+
+        const form = screen.getByTestId("form-new-bill");
+        const handleSubmit = jest.fn((e) => newBill.handleSubmit(e));
+
+        form.addEventListener("submit", handleSubmit);
+        fireEvent.submit(form);
+
+        expect(handleSubmit).toHaveBeenCalled();
+        expect(form).toBeTruthy();
+        });
+      });    
+    });
 
 /////////////////////////////////////////////////////////////////////////
 // [Test NewBills upload invoice receipt]
@@ -96,6 +129,7 @@ describe("Given I am connected as an employee", () => {
 
     describe("When i upload wrong file type", () => {
       test("Then a error message is diplaying", async () => {
+
         // document.body.innerHTML = NewBillUI();
         const html = NewBillUI();
         document.body.innerHTML = html;
@@ -105,7 +139,7 @@ describe("Given I am connected as an employee", () => {
         // const onNavigate = (pathname) => {
         //   document.body.innerHTML = ROUTES({ pathname });
         // };
-  
+
         const newBill = new NewBill({
           document,
           onNavigate,
@@ -128,10 +162,12 @@ describe("Given I am connected as an employee", () => {
   
         expect(handleChangeFile).toHaveBeenCalled();
         expect(inputFile.files[0].type).toBe("video/mp4");
+        expect(inputFile.value).toBe('');
         
         await waitFor(() => screen.getByTestId("message_file_type_error"));
         const errorFileType = screen.queryByTestId("message_file_type_error");
         expect(errorFileType.className).toBe("msg__error--filetype");
+
       });
     });
 
@@ -183,8 +219,70 @@ describe("Given I am connected as an employee", () => {
       });
     });
 
-  })
-})
+/////////////////////////////////////////////////////////////////////////
+// [Test NewBills upload allowed file type]
+///////////////////////////////////////////////////////////////////////// 
+
+    describe("When i fill bill form with valid input", () => {
+      test("Then i submit new bill", () => {
+        const html = NewBillUI();
+        document.body.innerHTML = html;
+
+        const onNavigate = (pathname) => {
+          document.body.innerHTML = ROUTES({ pathname })
+        };
+
+        const newBill = new NewBill({
+          document,
+          onNavigate,
+          store: mockStore,
+          localStorage: window.localStorage,
+        });
+
+        const testBill = {
+        type: 'Restaurants et bars',
+        name: 'Chez Madame HA',
+        date: '20115-07-02',
+        amount: 47,
+        vat: 20,
+        pct: 5,
+        commentary: 'Repas séminaire CodeChallenge',
+        fileUrl:
+          'https://github.com/Frederic-K/Billed-app-FR-Front/blob/main/src/assets/images/20230302_soupeNikuUdon.png',
+        fileName: 'RamenNikuUdon.jpg',
+        status: 'pending',
+        };
+
+        screen.getByTestId('expense-type').value = testBill.type
+        screen.getByTestId('expense-name').value = testBill.name
+        screen.getByTestId('datepicker').value = testBill.date
+        screen.getByTestId('amount').value = testBill.amount
+        screen.getByTestId('vat').value = testBill.vat
+        screen.getByTestId('pct').value = testBill.pct
+        screen.getByTestId('commentary').value = testBill.commentary 
+        
+        newBill.fileName = testBill.fileName
+        newBill.fileUrl = testBill.fileUrl
+
+        // const handelUpdateBill = jesy.fn((e) => newBill.updateBill)
+        // const getUpdateBillSpyOn = jest.spyOn(newBill, "updateBill")
+        // newBill.updateBill = jest.fn()
+        const form = screen.getByTestId("form-new-bill");
+        const handleSubmit = jest.fn((e) => newBill.handleSubmit(e));
+
+        form.addEventListener("submit", handleSubmit);
+        fireEvent.submit(form);
+        expect(handleSubmit).toHaveBeenCalled();
+        // expect(getUpdateBillSpyOn).toHaveBeenCalled();
+        // expect(newBill.updateBill).toHaveBeenCalled();
+      });
+    });
+
+
+
+
+  });
+});
 
 /////////////////////////////////////////////////////////////////////////
 // [Test d'intégration POST Bills]
@@ -193,29 +291,29 @@ describe("Given I am connected as an employee", () => {
 
 describe("Given im a user connected as Employee on new bill page", () => {
   describe("When i submit new bill", () => {
-
-    beforeEach(() => {
+    test("fetches messages from an API and fails with 500 message error", async () => {
+      beforeEach(() => {
+          console.error.mockRestore();
+      });
+      afterEach(() => {
+          console.error.mockClear();
+          
+      });
       // console.error = jest.fn()
       jest.spyOn(console, 'error').mockImplementation(() => {});
-
-      jest.spyOn(mockStore, "bills");  
+      jest.spyOn(mockStore, "bills");
 
       Object.defineProperty(window, "localStorage", {
         value: localStorageMock,
       });
-      window.localStorage.setItem('user', JSON.stringify({type: 'Employee', email: "a@a" }));
-    });
 
-    afterAll(() => {
-        console.error.mockRestore();
-    });
-
-    afterEach(() => {
-        console.error.mockClear();
-        
-  });
-    test("fetches messages from an API and fails with 500 message error", async () => {
-      
+      window.localStorage.setItem(
+        'user',
+        JSON.stringify({
+          type: 'Employee',
+          email: 'a@a',
+        })
+      );      
       window.onNavigate(ROUTES_PATH.NewBill);
 
       mockStore.bills.mockImplementationOnce(() => {
@@ -227,26 +325,19 @@ describe("Given im a user connected as Employee on new bill page", () => {
       });
 
       const newBill = new NewBill({
-        document,
-        onNavigate,
-        store: mockStore,
-        localStorage: window.localStorage,
+        document, 
+        onNavigate, 
+        store: mockStore, 
+        localStorage: window.localStorage
       });
 
       const form = screen.getByTestId("form-new-bill");
-
       const handleSubmit = jest.fn((e) => newBill.handleSubmit(e));
-
       form.addEventListener("submit", handleSubmit);
-
       fireEvent.submit(form);
-
       expect(handleSubmit).toHaveBeenCalled();
-
       await new Promise(process.nextTick);
-
       expect(console.error).toBeCalled();
-
     });
   });
 });

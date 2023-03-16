@@ -31,9 +31,13 @@ describe("Given I am connected as an employee", () => {
 
       Object.defineProperty(window, 'localStorage', { value: localStorageMock });
 
-      window.localStorage.setItem('user', JSON.stringify({
-        type: 'Employee'
-      }));
+      window.localStorage.setItem(
+        'user',
+        JSON.stringify({
+          type: 'Employee',
+          email: 'a@a',
+        })
+      );
 
       const root = document.createElement("div");
 
@@ -136,15 +140,23 @@ describe("When i click on the icon eye", () => {
     };
 
     Object.defineProperty(window, 'localStorage', { value: localStorageMock });
-    window.localStorage.setItem('user', JSON.stringify({
-      type: 'Employee'
-    }));
+    window.localStorage.setItem(
+      'user',
+      JSON.stringify({
+        type: 'Employee',
+        email: 'a@a',
+      })
+    );
 
     document.body.innerHTML = BillsUI({ data: bills });
 
     const store = mockStore;
     const bill = new Bills({
-      document, onNavigate, store, localStorage: window.localStorage
+      document, 
+      onNavigate, 
+      store, 
+      localStorage: 
+      window.localStorage
     });
     
     // const iconEye = screen.getAllByTestId("icon-eye")[0];
@@ -177,12 +189,21 @@ describe("When i click on new bill button", () => {
     };
 
     Object.defineProperty(window, 'localStorage', { value: localStorageMock });
-    window.localStorage.setItem('user', JSON.stringify({
-      type: 'Employee'
-    }));
+
+    window.localStorage.setItem(
+      'user',
+      JSON.stringify({
+        type: 'Employee',
+        email: 'a@a',
+      })
+    );
 
     const bill = new Bills({
-      document, onNavigate, store: null, bills:bills, localStorage: window.localStorage
+      document, 
+      onNavigate, 
+      store: null, 
+      bills:bills, 
+      localStorage: window.localStorage
     });
 
     document.body.innerHTML = BillsUI({ data: { bills } });
@@ -212,7 +233,13 @@ describe("Given im a user connected as Employee", () => {
 
       Object.defineProperty(window, 'localStorage', { value: localStorageMock });
 
-      window.localStorage.setItem("user", JSON.stringify({ type: "Employee", email: "a@a" }));
+      window.localStorage.setItem(
+        'user',
+        JSON.stringify({
+          type: 'Employee',
+          email: 'a@a',
+        })
+      );
 
       const root = document.createElement("div");
 
@@ -240,7 +267,13 @@ describe("Given im a user connected as Employee", () => {
     beforeEach(() => {
       jest.spyOn(mockStore, "bills")
       Object.defineProperty(window, "localStorage", { value: localStorageMock });
-      window.localStorage.setItem('user', JSON.stringify({type: 'Employee', email: "a@a" }));
+      window.localStorage.setItem(
+        'user',
+        JSON.stringify({
+          type: 'Employee',
+          email: 'a@a',
+        })
+      )
       const root = document.createElement("div");
       root.setAttribute("id", "root");
       document.body.appendChild(root);
