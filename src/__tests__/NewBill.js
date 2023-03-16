@@ -74,11 +74,15 @@ describe("Given I am connected as an employee", () => {
 
     describe("When i upload wrong file type", () => {
       test("Then a error message is diplaying", async () => {
-        document.body.innerHTML = NewBillUI();
+        // document.body.innerHTML = NewBillUI();
+        const html = NewBillUI();
+        document.body.innerHTML = html;
 
-        const onNavigate = (pathname) => {
-          document.body.innerHTML = ROUTES({ pathname });
-        };
+        window.onNavigate(ROUTES_PATH.NewBill);
+
+        // const onNavigate = (pathname) => {
+        //   document.body.innerHTML = ROUTES({ pathname });
+        // };
   
         const newBill = new NewBill({
           document,
@@ -91,11 +95,14 @@ describe("Given I am connected as an employee", () => {
         const handleChangeFile = jest.fn((e) => newBill.handleChangeFile(e));
         inputFile.addEventListener("change", handleChangeFile);
 
-        fireEvent.change(inputFile, {
-          target: {
-            files: [new File(["receiptTest.mp4"], "receiptTest.mp4", { type: "video/mp4" })],
-          }
-        });
+        const newFile = new File(["receiptTest.mp4"], "receiptTest.mp4", { type: "video/mp4" });
+        userEvent.upload(inputFile, newFile);
+
+        // fireEvent.change(inputFile, {
+        //   target: {
+        //     files: [new File(["receiptTest.mp4"], "receiptTest.mp4", { type: "video/mp4" })],
+        //   }
+        // });
   
         expect(handleChangeFile).toHaveBeenCalled();
         expect(inputFile.files[0].type).toBe("video/mp4");
@@ -103,22 +110,26 @@ describe("Given I am connected as an employee", () => {
         await waitFor(() => screen.getByTestId("message_file_type_error"));
         const errorFileType = screen.queryByTestId("message_file_type_error");
         expect(errorFileType.className).toBe("msg__error--filetype");
-      })
-    })
+      });
+    });
 
     describe("When i upload allowed file type", () => {
       test("Then uploaded file name is display", async () => {
+        // document.body.innerHTML = NewBillUI();
         const html = NewBillUI();
         document.body.innerHTML = html;
 
-        const onNavigate = (pathname) => {
-          document.body.innerHTML = ROUTES({ pathname });
-        };
-  
+        window.onNavigate(ROUTES_PATH.NewBill);
+
+        // const onNavigate = (pathname) => {
+        //   document.body.innerHTML = ROUTES({ pathname });
+        // };
+        
         const newBill = new NewBill({
           document,
+          // onNavigate: (pathname) => (document.body.innerHTML = ROUTES({ pathname })),
           onNavigate,
-          mockStore,
+          store: mockStore,
           localStorage: window.localStorage,
         });
 
@@ -126,21 +137,24 @@ describe("Given I am connected as an employee", () => {
         const handleChangeFile = jest.fn((e) => newBill.handleChangeFile(e));
         inputFile.addEventListener("change", handleChangeFile);
 
-        fireEvent.change(inputFile, {
-          target: {
-            files: [new File(["receiptTest.jpg"], "receiptTest.jpg", { type: "image/jpg" })],
-          }
-        });
+        const newFile = new File(["receiptTest.png"], "receiptTest.png", { type: "image/png" });
+        userEvent.upload(inputFile, newFile);
+
+        // fireEvent.change(inputFile, {
+        //   target: {
+        //     files: [new File(["receiptTest.png"], "receiptTest.png", { type: "image/png" })],
+        //   }
+        // });
 
         expect(handleChangeFile).toHaveBeenCalled();
-        expect(inputFile.files[0].type).toBe("image/jpg");
-        expect(inputFile.files[0]).toEqual(File)
+        expect(inputFile.files[0].type).toBe("image/png");
+        // expect(inputFile.files[0]).toEqual(File);
+        expect(inputFile.files[0]).toEqual(newFile);
         await waitFor(() => screen.getByTestId("message_file_type_error"));
         const errorFileType = screen.queryByTestId("message_file_type_error");
-        expect(errorFileType.getAttribute("class")).toMatch(/hidden/);
-      })
-    })
-
+        expect(errorFileType.getAttribute("class")).toMatch(/msg__error--filetype hidden/);
+      });
+    });
 
   })
 })    
