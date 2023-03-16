@@ -18,6 +18,8 @@ import {localStorageMock} from "../__mocks__/localStorage.js";
 
 import mockStore from "../__mocks__/store";
 
+// import store from "../__mocks__/store";
+
 import router from "../app/Router.js";
 // import store from "../__mocks__/store";
 
@@ -204,7 +206,7 @@ describe("When i click on new bill button", () => {
 // [Test d'intégration GET Bills]
 /////////////////////////////////////////////////////////////////////////
       
-describe("Given I'm a user connected as Employee", () => {
+describe("Given im a user connected as Employee", () => {
   describe("When i nav to Bills", () => {
     test("Fetch bills from mock API GET", async () => {
 
@@ -237,17 +239,11 @@ describe("Given I'm a user connected as Employee", () => {
   describe("When an error occurs on API", () => {
     beforeEach(() => {
       jest.spyOn(mockStore, "bills")
-
       Object.defineProperty(window, "localStorage", { value: localStorageMock });
-
       window.localStorage.setItem('user', JSON.stringify({type: 'Employee', email: "a@a" }));
-
       const root = document.createElement("div");
-
       root.setAttribute("id", "root");
-
       document.body.appendChild(root);
-
       router();
     });
 

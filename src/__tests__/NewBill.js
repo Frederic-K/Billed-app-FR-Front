@@ -16,9 +16,15 @@ import {localStorageMock} from "../__mocks__/localStorage.js";
 
 import mockStore from "../__mocks__/store";
 
+import store from "../__mocks__/store";
+
 import router from "../app/Router.js";
 
 jest.mock("../app/store", () => mockStore);
+
+/////////////////////////////////////////////////////////////////////////
+// [Ajout de tests unitaires et d'intégration]
+/////////////////////////////////////////////////////////////////////////
 
 describe("Given I am connected as an employee", () => {
 
@@ -33,6 +39,10 @@ describe("Given I am connected as an employee", () => {
     )
   });
 
+/////////////////////////////////////////////////////////////////////////
+// [Test NewBills highlighted mail icon in vertical layout]
+/////////////////////////////////////////////////////////////////////////  
+
   describe("When im on NewBill Page", () => {
     test("Then mail icon in vertical layout should be highlighted", async () => {
       const root = document.createElement("div");
@@ -45,6 +55,10 @@ describe("Given I am connected as an employee", () => {
       const mailIcon = screen.getByTestId("icon-mail");
       expect(mailIcon.className).toBe("active-icon");
     });
+
+/////////////////////////////////////////////////////////////////////////
+// [Test NewBills page loaded]
+/////////////////////////////////////////////////////////////////////////      
 
     test("Then new bill form should be display", () => {      
       const html = NewBillUI();
@@ -63,6 +77,10 @@ describe("Given I am connected as an employee", () => {
     });
   });
 
+/////////////////////////////////////////////////////////////////////////
+// [Test NewBills upload invoice receipt]
+/////////////////////////////////////////////////////////////////////////   
+
   describe("When i upload invoice receipt file", () => {
 
     beforeEach(() => {
@@ -71,6 +89,10 @@ describe("Given I am connected as an employee", () => {
     afterEach(() => {
       jest.clearAllMocks()
     });
+
+/////////////////////////////////////////////////////////////////////////
+// [Test NewBills upload wrong file type]
+/////////////////////////////////////////////////////////////////////////       
 
     describe("When i upload wrong file type", () => {
       test("Then a error message is diplaying", async () => {
@@ -113,6 +135,10 @@ describe("Given I am connected as an employee", () => {
       });
     });
 
+/////////////////////////////////////////////////////////////////////////
+// [Test NewBills upload allowed file type]
+/////////////////////////////////////////////////////////////////////////    
+
     describe("When i upload allowed file type", () => {
       test("Then uploaded file name is display", async () => {
         // document.body.innerHTML = NewBillUI();
@@ -129,7 +155,8 @@ describe("Given I am connected as an employee", () => {
           document,
           // onNavigate: (pathname) => (document.body.innerHTML = ROUTES({ pathname })),
           onNavigate,
-          store: mockStore,
+          // store: mockStore,
+          store,
           localStorage: window.localStorage,
         });
 
@@ -157,4 +184,69 @@ describe("Given I am connected as an employee", () => {
     });
 
   })
-})    
+})
+
+/////////////////////////////////////////////////////////////////////////
+// [Test d'intégration POST Bills]
+/////////////////////////////////////////////////////////////////////////
+/// https://stackoverflow.com/questions/44596915/jest-mocking-console-error-tests-fails
+
+describe("Given im a user connected as Employee on new bill page", () => {
+  describe("When i submit new bill", () => {
+
+    beforeEach(() => {
+      // console.error = jest.fn()
+      jest.spyOn(console, 'error').mockImplementation(() => {});
+
+      jest.spyOn(mockStore, "bills");  
+
+      Object.defineProperty(window, "localStorage", {
+        value: localStorageMock,
+      });
+      window.localStorage.setItem('user', JSON.stringify({type: 'Employee', email: "a@a" }));
+    });
+
+    afterAll(() => {
+        console.error.mockRestore();
+    });
+
+    afterEach(() => {
+        console.error.mockClear();
+        
+  });
+    test("fetches messages from an API and fails with 500 message error", async () => {
+      
+      window.onNavigate(ROUTES_PATH.NewBill);
+
+      mockStore.bills.mockImplementationOnce(() => {
+        return {
+          update: () => {
+            return Promise.reject(new Error('Erreur 500'))
+          }
+        }
+      });
+
+      const newBill = new NewBill({
+        document,
+        onNavigate,
+        store: mockStore,
+        localStorage: window.localStorage,
+      });
+
+      const form = screen.getByTestId("form-new-bill");
+
+      const handleSubmit = jest.fn((e) => newBill.handleSubmit(e));
+
+      form.addEventListener("submit", handleSubmit);
+
+      fireEvent.submit(form);
+
+      expect(handleSubmit).toHaveBeenCalled();
+
+      await new Promise(process.nextTick);
+
+      expect(console.error).toBeCalled();
+
+    });
+  });
+});
