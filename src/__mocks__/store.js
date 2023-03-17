@@ -10,7 +10,7 @@ const mockedBills = {
       "name": "encore",
       // "fileName": "preview-facture-free-201801-pdf-1.jpg",
       // "date": "2004-04-04",
-      "date": "025-2014-LK",
+      "date": "025-2014-LK", /// Test Bills : catch error ln 44 test bills.je 
       "amount": 400,
       "commentAdmin": "ok",
       "email": "a@a",

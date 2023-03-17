@@ -84,6 +84,7 @@ describe("Given I am connected as an employee", () => {
 
     describe("When i submit an incomplete expense report form", () => {
       test("Thern i should stay on NewBill page", () => {
+
         window.onNavigate(ROUTES_PATH.NewBill);
 
         const newBill = new NewBill({
@@ -131,6 +132,8 @@ describe("Given I am connected as an employee", () => {
 
     describe("When i upload wrong file type", () => {
       test("Then a error message is diplaying", async () => {
+
+        jest.spyOn(console, 'error').mockImplementation(() => {});
 
         // document.body.innerHTML = NewBillUI();
         const html = NewBillUI();
@@ -302,12 +305,23 @@ describe("When i submit a valid new bill", () => {
 
 describe("When an error occurs on API", () => {
   beforeEach(() => {
-    jest.spyOn(mockStore, "bills")
+    jest.spyOn(mockStore, "bills");
+    Object.defineProperty(window, "localStorage", { value: localStorageMock });
+    window.localStorage.setItem(
+      'user',
+      JSON.stringify({
+        type: 'Employee',
+        email: 'a@a',
+      })
+    )
+    const root = document.createElement("div");
+    root.setAttribute("id", "root");
+    document.body.appendChild(root);
+    router();
   })
 
-  test("fetches bills to an API and fails with 401 message error", async () => {
+  test("Fetches bills to an API and fails with 401 message error", async () => {
     //https://developer.mozilla.org/fr/docs/Web/HTTP/Status/401
-    //jest.spyOn(console, "error").mockImplementation(() => {})
     mockStore.bills.mockImplementationOnce(() => {
       return {
         list: () => {
@@ -318,12 +332,12 @@ describe("When an error occurs on API", () => {
     
     const html = BillsUI({ error: "Erreur 401" });
     document.body.innerHTML = html;
+    await new Promise(process.nextTick);
     const message = await screen.getByText(/Erreur 401/);
     expect(message).toBeTruthy();
   });
 
-  test("fetches bills to an API and fails with 404 message error", async () => {
-    //jest.spyOn(console, "error").mockImplementation(() => {})
+  test("Fetches bills to an API and fails with 404 message error", async () => {
     mockStore.bills.mockImplementationOnce(() => {
       return {
         list: () => {
@@ -334,12 +348,12 @@ describe("When an error occurs on API", () => {
     
     const html = BillsUI({ error: "Erreur 404" });
     document.body.innerHTML = html;
+    await new Promise(process.nextTick);
     const message = await screen.getByText(/Erreur 404/);
     expect(message).toBeTruthy(); 
   });
 
-  test("fetches bills to an API and fails with 500 message error", async () => {
-    //jest.spyOn(console, "error").mockImplementation(() => {})
+  test("Fetches bills to an API and fails with 500 message error", async () => {
     mockStore.bills.mockImplementationOnce(() => {
       return {
         list: () => {
@@ -350,6 +364,7 @@ describe("When an error occurs on API", () => {
     
     const html = BillsUI({ error: "Erreur 500" });
     document.body.innerHTML = html;
+    await new Promise(process.nextTick);
     const message = await screen.getByText(/Erreur 500/);
     expect(message).toBeTruthy(); 
   });
@@ -362,3 +377,10 @@ describe("When an error occurs on API", () => {
 // expect(console.error).toBeCalled();
 
 ////////////////////////////////////////////////////////////////////////
+
+// Object.defineProperty(window, 'location', {
+//   value: { hash: ROUTES_PATH['NewBill'] },
+// })
+
+// expect(console.error).toBeCalled();
+
