@@ -19,7 +19,6 @@ import {localStorageMock} from "../__mocks__/localStorage.js";
 import mockStore from "../__mocks__/store";
 
 // import store from "../__mocks__/store";
-
 import router from "../app/Router.js";
 // import store from "../__mocks__/store";
 
@@ -117,7 +116,7 @@ describe("When im connected as an Employee", () => {
 describe("When im connected as an Employee", () => {
   describe('When im on Dashboard page but back-end send an error message', () => {
     test('Then Error page should be rendered', () => {
-      document.body.innerHTML = BillsUI({ error: 'some error message' });
+      document.body.innerHTML = BillsUI({ error: "error message" });
 
       expect(screen.getAllByText("Erreur")).toBeTruthy();
       
@@ -242,18 +241,14 @@ describe("Given im a user connected as Employee", () => {
       );
 
       const root = document.createElement("div");
-
       root.setAttribute("id", "root");
-
       document.body.append(root);
-
       router();
-
       window.onNavigate(ROUTES_PATH.Bills);
       // const onNavigate = (pathname) => {
       //   document.body.innerHTML = ROUTES({ pathname });
 
-      const getStoreSpyOn = jest.spyOn(mockStore, "bills")
+      const getStoreSpyOn = jest.spyOn(mockStore, "bills");
 
       const bills = await mockStore.bills().list();
       expect(getStoreSpyOn).toHaveBeenCalledTimes(1);
@@ -265,7 +260,7 @@ describe("Given im a user connected as Employee", () => {
 
   describe("When an error occurs on API", () => {
     beforeEach(() => {
-      jest.spyOn(mockStore, "bills")
+      jest.spyOn(mockStore, "bills");
       Object.defineProperty(window, "localStorage", { value: localStorageMock });
       window.localStorage.setItem(
         'user',
@@ -311,4 +306,4 @@ describe("Given im a user connected as Employee", () => {
     });
   });
   });
-})
+});
