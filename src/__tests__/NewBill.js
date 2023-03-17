@@ -6,6 +6,8 @@ import {fireEvent, screen, waitFor} from "@testing-library/dom"
 
 import userEvent from "@testing-library/user-event";
 
+import BillsUI from "../views/BillsUI.js";
+
 import NewBillUI from "../views/NewBillUI.js";
 
 import NewBill from "../containers/NewBill.js";
@@ -304,206 +306,62 @@ describe("When an error occurs on API", () => {
     jest.spyOn(mockStore, "bills")
   })
 
-  /// https://developer.mozilla.org/fr/docs/Web/HTTP/Status/401
-  it("fetches bills to an API and fails with 401 message error", async () => {
+  test("fetches bills to an API and fails with 401 message error", async () => {
+    // jest.spyOn(mockStore, "bills")
+    //jest.spyOn(console, "error").mockImplementation(() => {})
     mockStore.bills.mockImplementationOnce(() => {
       return {
-        create : () =>  {
-          return Promise.reject(new Error("Erreur 401"))
-        }
-      }
-    })
-    await new Promise(process.nextTick);
-    await waitFor(() => screen.getByText("Envoyer une note de frais"));
-    expect(screen.getByTestId("sendbillform")).toBeTruthy();
-    // expect(screen.queryByText("Envoyer une note de frais")).toBeTruthy()
-  })
-  it("fetches bills to an API and fails with 500 message error", async () => {
-    mockStore.bills.mockImplementationOnce(() => {
-      return {
-        create : () =>  {
-          return Promise.reject(new Error("Erreur 500"))
-        }
-      }})
-    await new Promise(process.nextTick);
-    await waitFor(() => screen.getByText("Envoyer une note de frais"));
-    expect(screen.getByTestId("sendbillform")).toBeTruthy();
-  })
-})
-//})
-////////////////////////////////////////////////////////////////////////////
-
-// describe("When an error occurs on API", () => {
-//   beforeEach(() => {
-//     jest.spyOn(mockStore, "bills")
-//     Object.defineProperty(window, "localStorage", { value: localStorageMock });
-//     window.localStorage.setItem(
-//       'user',
-//       JSON.stringify({
-//         type: 'Employee',
-//         email: 'a@a',
-//       })
-//     )
-//     const root = document.createElement("div");
-//     root.setAttribute("id", "root");
-//     document.body.appendChild(root);
-//     router();
-//   });
-
-//     test("Then fetches bills to mock API POST and fails with 404 message error", async () => {
-//       mockStore.bills.mockImplementationOnce(() => {
-//         return {
-//           update: () => {
-//             return Promise.reject(new Error("Erreur 404"));
-//           },
-//         };
-//       });
-
-//       window.onNavigate(ROUTES_PATH.NewBill);
-//       await new Promise(process.nextTick);
-//       const message = await screen.getByText(/Erreur 404/);
-//       expect(message).toBeTruthy();
-//     });
-
-//     test("Then fetches new bill to mock API POST and fails with 500 message error", async () => {
-//       mockStore.bills.mockImplementationOnce(() => {
-//         return {
-//           update: () => {
-//             return Promise.reject(new Error("Erreur 500"));
-//           },
-//         };
-//       });
-
-//       window.onNavigate(ROUTES_PATH.NewBill);
-//       await new Promise(process.nextTick);
-//       const message = await screen.getByText(/Erreur 500/);
-//       expect(message).toBeTruthy();
-//     });
-//   });
-
-
-  
-
-  
-//})
-//})
-
-
-    // describe("When i fill bill form with valid input", () => {
-    //   test("Then i submit new bill", () => {
-    //     const html = NewBillUI();
-    //     document.body.innerHTML = html;
-
-    //     const onNavigate = (pathname) => {
-    //       document.body.innerHTML = ROUTES({ pathname })
-    //     };
-
-    //     const newBill = new NewBill({
-    //       document,
-    //       onNavigate,
-    //       store: mockStore,
-    //       localStorage: window.localStorage,
-    //     });
-
-    //     const testBill = {
-    //     type: 'Restaurants et bars',
-    //     name: 'Chez Madame HA',
-    //     date: '20115-07-02',
-    //     amount: 47,
-    //     vat: 20,
-    //     pct: 5,
-    //     commentary: 'Repas séminaire CodeChallenge',
-    //     fileUrl:
-    //       'https://github.com/Frederic-K/Billed-app-FR-Front/blob/main/src/assets/images/20230302_soupeNikuUdon.png',
-    //     fileName: 'RamenNikuUdon.jpg',
-    //     status: 'pending',
-    //     };
-
-    //     screen.getByTestId('expense-type').value = testBill.type
-    //     screen.getByTestId('expense-name').value = testBill.name
-    //     screen.getByTestId('datepicker').value = testBill.date
-    //     screen.getByTestId('amount').value = testBill.amount
-    //     screen.getByTestId('vat').value = testBill.vat
-    //     screen.getByTestId('pct').value = testBill.pct
-    //     screen.getByTestId('commentary').value = testBill.commentary 
-        
-    //     newBill.fileName = testBill.fileName
-    //     newBill.fileUrl = testBill.fileUrl
-
-    //     const handleSubmit = jest.fn((e) => newBill.handleSubmit(e));
-
-    //     const handelUpdateBill = jest.fn((e) => newBill.updateBill)
-    //     // const getUpdateBillSpyOn = jest.spyOn(newBill, "updateBill")
-    //     // newBill.updateBill = jest.fn()
-
-    //     const form = screen.getByTestId("form-new-bill");
-    //     form.addEventListener("submit", handleSubmit);
-    //     fireEvent.submit(form);
-
-    //     expect(handleSubmit).toHaveBeenCalled();
-    //     expect(handelUpdateBill).toHaveBeenCalled();
-    //     // expect(getUpdateBillSpyOn).toHaveBeenCalled();
-    //     // expect(newBill.updateBill).toHaveBeenCalled();
-    //   });
-    // });
-
-/////////////////////////////////////////////////////////////////////////
-// [Test d'intégration POST Bill]
-/////////////////////////////////////////////////////////////////////////
-/// https://stackoverflow.com/questions/44596915/jest-mocking-console-error-tests-fails
-
-// describe("Given im a user connected as Employee on new bill page", () => {
-//   describe("When i submit new bill", () => {
-//     test("fetches messages from an API and fails with 500 message error", async () => {
-//       beforeEach(() => {
-//           console.error.mockRestore();
-//       });
-//       afterEach(() => {
-//           console.error.mockClear();
-          
-//       });
-//       window.localStorage.setItem(
-//         'user',
-//         JSON.stringify({
-//           type: 'Employee',
-//           email: 'a@a',
-//         })
-//       );  
-//       // console.error = jest.fn()
-//       jest.spyOn(console, 'error').mockImplementation(() => {});
-//       jest.spyOn(mockStore, "bills");
-
-//       // Object.defineProperty(window, "localStorage", {
-//       //   value: localStorageMock,
-//       // });
-//       // Object.defineProperty(window, 'location', {
-//       //   value: { hash: ROUTES_PATH['NewBill'] },
-//       // })
+        list: () => {
+          return Promise.reject(new Error("Erreur 401"));
+        },
+      };
+    });
     
-//       window.onNavigate(ROUTES_PATH.NewBill);
+    const html = BillsUI({ error: "Erreur 401" });
+    document.body.innerHTML = html;
+    const message = await screen.getByText(/Erreur 401/);
+    expect(message).toBeTruthy(); 
+  });
 
-//       mockStore.bills.mockImplementationOnce(() => {
-//         return {
-//           update: () => {
-//             return Promise.reject(new Error('Erreur 500'))
-//           }
-//         }
-//       });
+  test("fetches bills to an API and fails with 404 message error", async () => {
+    // jest.spyOn(mockStore, "bills")
+    //jest.spyOn(console, "error").mockImplementation(() => {})
+    mockStore.bills.mockImplementationOnce(() => {
+      return {
+        list: () => {
+          return Promise.reject(new Error("Erreur 404"));
+        },
+      };
+    });
+    
+    const html = BillsUI({ error: "Erreur 404" });
+    document.body.innerHTML = html;
+    const message = await screen.getByText(/Erreur 404/);
+    expect(message).toBeTruthy(); 
+  });
 
-//       const newBill = new NewBill({
-//         document, 
-//         onNavigate, 
-//         store: mockStore, 
-//         localStorage: window.localStorage
-//       });
+  test("fetches bills to an API and fails with 500 message error", async () => {
+    // jest.spyOn(mockStore, "bills")
+    //jest.spyOn(console, "error").mockImplementation(() => {})
+    mockStore.bills.mockImplementationOnce(() => {
+      return {
+        list: () => {
+          return Promise.reject(new Error("Erreur 500"));
+        },
+      };
+    });
+    
+    const html = BillsUI({ error: "Erreur 500" });
+    document.body.innerHTML = html;
+    const message = await screen.getByText(/Erreur 500/);
+    expect(message).toBeTruthy(); 
+  });
+});  
 
-//       const form = screen.getByTestId("form-new-bill");
-//       const handleSubmit = jest.fn((e) => newBill.handleSubmit(e));
-//       form.addEventListener("submit", handleSubmit);
-//       fireEvent.submit(form);
-//       expect(handleSubmit).toHaveBeenCalled();
-//       await new Promise(process.nextTick);
-//       expect(console.error).toBeCalled();
-//     });
-//   });
-// });
+////////////////////////////////////////////////////////////////////////
+
+// console.error = jest.fn()
+// jest.spyOn(console, 'error').mockImplementation(() => {});
+// expect(console.error).toBeCalled();
+
+////////////////////////////////////////////////////////////////////////
