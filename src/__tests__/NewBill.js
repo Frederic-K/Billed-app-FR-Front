@@ -302,24 +302,24 @@ describe("Given im a user connected as Employee on new bill page", () => {
           console.error.mockClear();
           
       });
-      // console.error = jest.fn()
-      jest.spyOn(console, 'error').mockImplementation(() => {});
-      jest.spyOn(mockStore, "bills");
-
-      Object.defineProperty(window, "localStorage", {
-        value: localStorageMock,
-      });
-      Object.defineProperty(window, 'location', {
-        value: { hash: ROUTES_PATH['NewBill'] },
-      })
-
       window.localStorage.setItem(
         'user',
         JSON.stringify({
           type: 'Employee',
           email: 'a@a',
         })
-      );      
+      );  
+      // console.error = jest.fn()
+      jest.spyOn(console, 'error').mockImplementation(() => {});
+      jest.spyOn(mockStore, "bills");
+
+      // Object.defineProperty(window, "localStorage", {
+      //   value: localStorageMock,
+      // });
+      // Object.defineProperty(window, 'location', {
+      //   value: { hash: ROUTES_PATH['NewBill'] },
+      // })
+    
       window.onNavigate(ROUTES_PATH.NewBill);
 
       mockStore.bills.mockImplementationOnce(() => {
