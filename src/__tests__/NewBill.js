@@ -269,8 +269,7 @@ describe("When i fill bill form with valid input", () => {
       const form = screen.getByTestId("form-new-bill");
       form.addEventListener("submit", handleSubmit);
       fireEvent.submit(form);
-      expect(handleSubmit).toHaveBeenCalled();
-      
+      expect(handleSubmit).toHaveBeenCalled();      
     });
   });
 });  
@@ -307,7 +306,7 @@ describe("When an error occurs on API", () => {
   })
 
   test("fetches bills to an API and fails with 401 message error", async () => {
-    // jest.spyOn(mockStore, "bills")
+    //https://developer.mozilla.org/fr/docs/Web/HTTP/Status/401
     //jest.spyOn(console, "error").mockImplementation(() => {})
     mockStore.bills.mockImplementationOnce(() => {
       return {
@@ -320,11 +319,10 @@ describe("When an error occurs on API", () => {
     const html = BillsUI({ error: "Erreur 401" });
     document.body.innerHTML = html;
     const message = await screen.getByText(/Erreur 401/);
-    expect(message).toBeTruthy(); 
+    expect(message).toBeTruthy();
   });
 
   test("fetches bills to an API and fails with 404 message error", async () => {
-    // jest.spyOn(mockStore, "bills")
     //jest.spyOn(console, "error").mockImplementation(() => {})
     mockStore.bills.mockImplementationOnce(() => {
       return {
@@ -341,7 +339,6 @@ describe("When an error occurs on API", () => {
   });
 
   test("fetches bills to an API and fails with 500 message error", async () => {
-    // jest.spyOn(mockStore, "bills")
     //jest.spyOn(console, "error").mockImplementation(() => {})
     mockStore.bills.mockImplementationOnce(() => {
       return {
