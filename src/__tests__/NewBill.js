@@ -268,11 +268,16 @@ describe("When i fill bill form with valid input", () => {
       newBill.fileName = testBill.fileName
       newBill.fileUrl = testBill.fileUrl
 
+      // newBill.updateBill = jest.fn()  
+      const handelUpdateBill = jest.fn((e) => newBill.updateBill(e));  
+
       const handleSubmit = jest.fn((e) => newBill.handleSubmit(e));
       const form = screen.getByTestId("form-new-bill");
       form.addEventListener("submit", handleSubmit);
       fireEvent.submit(form);
-      expect(handleSubmit).toHaveBeenCalled();      
+      expect(handleSubmit).toHaveBeenCalled();
+      // expect(newBill.updateBill).toHaveBeenCalled()
+      expect(handelUpdateBill).toHaveBeenCalled();      
     });
   });
 });  
