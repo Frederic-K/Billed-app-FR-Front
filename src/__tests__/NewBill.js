@@ -295,7 +295,7 @@ describe("When i submit a valid new bill", () => {
 
     jest.spyOn(mockStore, "bills").mockImplementationOnce(() => {
       return {
-        update: () => {
+        create: () => {
           return Promise.resolve();
         },
       };
