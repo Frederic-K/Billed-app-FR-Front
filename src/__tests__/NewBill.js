@@ -306,6 +306,29 @@ describe("When i submit a valid new bill", () => {
     await waitFor(() => screen.getByText("Mes notes de frais"));
     expect(screen.getByTestId("tbody")).toBeTruthy();
   });
+// });
+
+test("Fetch new bills to mock API POST", async () => {
+  jest.spyOn(console, 'error').mockImplementation(() => {});
+  // const root = document.createElement("div");
+  // root.setAttribute("id", "root");
+  // document.body.appendChild(root);
+  // router();
+
+  const html = NewBillUI();
+  document.body.innerHTML = html;
+
+  jest.spyOn(mockStore, "bills").mockImplementationOnce(() => {
+    return {
+      create: () => {
+        return Promise.reject();
+      },
+    };
+  });
+
+  window.onNavigate(ROUTES_PATH.NewBill);
+  expect(console.error).toBeCalled();
+});
 });
 
 describe("When an error occurs on API", () => {

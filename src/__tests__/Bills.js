@@ -130,6 +130,12 @@ describe("When im connected as an Employee", () => {
 /////////////////////////////////////////////////////////////////////////
 
 describe("When i click on the icon eye", () => {
+
+  describe("Set local storage item", () => {
+    beforeEach(() => {
+      window.localStorage.clear();
+    });
+
   test("a modal should open displaying the invoice receipt", () => {
 
     $.fn.modal = jest.fn(); /// https://stackoverflow.com/questions/45225235/accessing-bootstrap-functionality-in-jest-testing
@@ -306,4 +312,5 @@ describe("Given im a user connected as Employee", () => {
     });
   });
   });
+});
 });
