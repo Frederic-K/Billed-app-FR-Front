@@ -130,6 +130,13 @@ describe("When im connected as an Employee", () => {
 /////////////////////////////////////////////////////////////////////////
 
 describe("When i click on the icon eye", () => {
+
+  describe("Set local storage item", () => {
+    beforeEach(() => {
+      window.localStorage.clear();
+      jest.clearAllMocks();
+    });
+
   test("a modal should open displaying the invoice receipt", () => {
 
     $.fn.modal = jest.fn(); /// https://stackoverflow.com/questions/45225235/accessing-bootstrap-functionality-in-jest-testing
@@ -175,12 +182,19 @@ describe("When i click on the icon eye", () => {
     expect(screen.getByText("Justificatif")).toBeTruthy();
   });
 });
+});
 
 /////////////////////////////////////////////////////////////////////////
 // [Test new Bill]
 /////////////////////////////////////////////////////////////////////////
       
 describe("When i click on new bill button", () => {
+
+  describe("Set local storage item", () => {
+    beforeEach(() => {
+      window.localStorage.clear();
+    });
+
   test("Then new bill modal should be display", () => {
 
     const onNavigate = (pathname) => {
@@ -197,11 +211,12 @@ describe("When i click on new bill button", () => {
       })
     );
 
+    const store = "";
     const bill = new Bills({
       document, 
       onNavigate, 
-      store: null, 
-      bills:bills, 
+      store, 
+      bills: bills, 
       localStorage: window.localStorage
     });
 
@@ -221,12 +236,20 @@ describe("When i click on new bill button", () => {
     expect(screen.getByTestId("form-new-bill")).toBeTruthy();
   });
 });
+});
 
 /////////////////////////////////////////////////////////////////////////
 // [Test d'intégration GET Bills]
 /////////////////////////////////////////////////////////////////////////
       
 describe("Given im a user connected as Employee", () => {
+
+  describe("Set local storage item", () => {
+    beforeEach(() => {
+      window.localStorage.clear();
+      jest.clearAllMocks();
+    });
+    
   describe("When i nav to Bills", () => {
     test("Fetch bills from mock API GET", async () => {
 
@@ -246,7 +269,7 @@ describe("Given im a user connected as Employee", () => {
       router();
       window.onNavigate(ROUTES_PATH.Bills);
       // const onNavigate = (pathname) => {
-      //   document.body.innerHTML = ROUTES({ pathname });
+      // document.body.innerHTML = ROUTES({ pathname });
 
       const getStoreSpyOn = jest.spyOn(mockStore, "bills");
 
@@ -306,4 +329,5 @@ describe("Given im a user connected as Employee", () => {
     });
   });
   });
+});
 });
