@@ -5,7 +5,10 @@ import Actions from './Actions.js'
 
 const row = (bill) => {
   // console.log('bill', bill);
-  return `
+  if (bill.type === null || bill.type === "") {
+     //  console.log("Bill format error", bill.type);
+  } else {
+      return `
     <tr data-testid="arraybillitemlist">
       <td>${bill.type}</td>
       <td>${bill.name}</td>
@@ -17,6 +20,7 @@ const row = (bill) => {
       </td>
     </tr>
     `;
+  };
   };
 /////////////////////////////////////////////////////////////////////////
 // [Bug report] - Bills : Le test Bills / les notes de frais s'affichent par ordre décroissant est passé au rouge.

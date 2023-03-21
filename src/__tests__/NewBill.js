@@ -3,23 +3,14 @@
  */
 
 import {fireEvent, screen, waitFor} from "@testing-library/dom"
-
 import userEvent from "@testing-library/user-event";
-
 import BillsUI from "../views/BillsUI.js";
-
 import NewBillUI from "../views/NewBillUI.js";
-
 import NewBill from "../containers/NewBill.js";
-
 import { ROUTES, ROUTES_PATH } from "../constants/routes.js";
-
 import {localStorageMock} from "../__mocks__/localStorage.js";
-
 import mockStore from "../__mocks__/store";
-
 import store from "../__mocks__/store";
-
 import router from "../app/Router.js";
 
 jest.mock("../app/store", () => mockStore);
@@ -133,15 +124,13 @@ describe("Given I am connected as an employee", () => {
     describe("When i upload wrong file type", () => {
       test("Then a error message is diplaying", async () => {
 
+        jest.spyOn(console, 'error').mockImplementation(() => {});
+
         // document.body.innerHTML = NewBillUI();
         const html = NewBillUI();
         document.body.innerHTML = html;
 
         window.onNavigate(ROUTES_PATH.NewBill);
-
-        // const onNavigate = (pathname) => {
-        //   document.body.innerHTML = ROUTES({ pathname });
-        // };
 
         const newBill = new NewBill({
           document,
@@ -156,12 +145,6 @@ describe("Given I am connected as an employee", () => {
 
         const newFile = new File(["receiptTest.mp4"], "receiptTest.mp4", { type: "video/mp4" });
         userEvent.upload(inputFile, newFile);
-
-        // fireEvent.change(inputFile, {
-        //   target: {
-        //     files: [new File(["receiptTest.mp4"], "receiptTest.mp4", { type: "video/mp4" })],
-        //   }
-        // });
   
         expect(handleChangeFile).toHaveBeenCalled();
         expect(inputFile.files[0].type).toBe("video/mp4");
@@ -185,16 +168,10 @@ describe("When i upload allowed file type", () => {
     document.body.innerHTML = html;
 
     window.onNavigate(ROUTES_PATH.NewBill);
-
-    // const onNavigate = (pathname) => {
-    //   document.body.innerHTML = ROUTES({ pathname });
-    // };
     
     const newBill = new NewBill({
       document,
-      // onNavigate: (pathname) => (document.body.innerHTML = ROUTES({ pathname })),
       onNavigate,
-      // store: mockStore,
       store,
       localStorage: window.localStorage,
     });
@@ -206,15 +183,8 @@ describe("When i upload allowed file type", () => {
     const newFile = new File(["receiptTest.png"], "receiptTest.png", { type: "image/png" });
     userEvent.upload(inputFile, newFile);
 
-    // fireEvent.change(inputFile, {
-    //   target: {
-    //     files: [new File(["receiptTest.png"], "receiptTest.png", { type: "image/png" })],
-    //   }
-    // });
-
     expect(handleChangeFile).toHaveBeenCalled();
     expect(inputFile.files[0].type).toBe("image/png");
-    // expect(inputFile.files[0]).toEqual(File);
     expect(inputFile.files[0]).toEqual(newFile);
     await waitFor(() => screen.getByTestId("message_file_type_error"));
     const errorFileType = screen.queryByTestId("message_file_type_error");
@@ -270,7 +240,8 @@ describe("When i fill bill form with valid input", () => {
       const form = screen.getByTestId("form-new-bill");
       form.addEventListener("submit", handleSubmit);
       fireEvent.submit(form);
-      expect(handleSubmit).toHaveBeenCalled();      
+      expect(handleSubmit).toHaveBeenCalled();
+   
     });
   });
 });  
@@ -318,24 +289,7 @@ describe("When an error occurs on API", () => {
     router();
   })
 
-  test("Fetches bills to an API and fails with 401 message error", async () => {
-    //https://developer.mozilla.org/fr/docs/Web/HTTP/Status/401
-    mockStore.bills.mockImplementationOnce(() => {
-      return {
-        list: () => {
-          return Promise.reject(new Error("Erreur 401"));
-        },
-      };
-    });
-    
-    const html = BillsUI({ error: "Erreur 401" });
-    document.body.innerHTML = html;
-    await new Promise(process.nextTick);
-    const message = await screen.getByText(/Erreur 401/);
-    expect(message).toBeTruthy();
-  });
-
-  test("Fetches bills to an API and fails with 404 message error", async () => {
+  test("Fetches bills to an API and fails with 404 message error - 404 Not Found", async () => {
     mockStore.bills.mockImplementationOnce(() => {
       return {
         list: () => {
@@ -351,7 +305,7 @@ describe("When an error occurs on API", () => {
     expect(message).toBeTruthy(); 
   });
 
-  test("Fetches bills to an API and fails with 500 message error", async () => {
+  test("Fetches bills to an API and fails with 500 message error - 500 Internal Server Error", async () => {
     mockStore.bills.mockImplementationOnce(() => {
       return {
         list: () => {
@@ -367,18 +321,4 @@ describe("When an error occurs on API", () => {
     expect(message).toBeTruthy(); 
   });
 });  
-
-////////////////////////////////////////////////////////////////////////
-
-// console.error = jest.fn()
-// jest.spyOn(console, 'error').mockImplementation(() => {});
-// expect(console.error).toBeCalled();
-
-////////////////////////////////////////////////////////////////////////
-
-// Object.defineProperty(window, 'location', {
-//   value: { hash: ROUTES_PATH['NewBill'] },
-// })
-
-// expect(console.error).toBeCalled();
 

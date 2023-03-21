@@ -2,29 +2,22 @@
  * @jest-environment jsdom
  */
 
-import {screen, waitFor} from "@testing-library/dom"
-
+import {screen, waitFor} from "@testing-library/dom";
 import userEvent from "@testing-library/user-event";
-
-import BillsUI from "../views/BillsUI.js"
-
+import BillsUI from "../views/BillsUI.js";
 import Bills from '../containers/Bills.js';
-
-import { bills } from "../fixtures/bills.js"
-
+import { bills } from "../fixtures/bills.js";
 import { ROUTES, ROUTES_PATH } from "../constants/routes.js";
-
 import {localStorageMock} from "../__mocks__/localStorage.js";
-
 import mockStore from "../__mocks__/store";
-
-// import store from "../__mocks__/store";
 import router from "../app/Router.js";
-// import store from "../__mocks__/store";
 
 jest.mock("../app/Store", () => mockStore);
 
 describe("Given I am connected as an employee", () => {
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
   describe("When I am on Bills Page", () => {
     test("Then bill icon in vertical layout should be highlighted", async () => {
 
@@ -39,37 +32,26 @@ describe("Given I am connected as an employee", () => {
       );
 
       const root = document.createElement("div");
-
       root.setAttribute("id", "root");
-
       document.body.append(root);
-
       router();
-
       window.onNavigate(ROUTES_PATH.Bills);
-
       await waitFor(() => screen.getByTestId('icon-window'));
-
       const windowIcon = screen.getByTestId('icon-window');
 
 /////////////////////////////////////////////////////////////////////////
 // [Ajout de tests unitaires et d'intégration] : il manque la mention “expect”
 /////////////////////////////////////////////////////////////////////////
 
-      // expect(windowIcon).toHaveClass("active-icon");
       expect(windowIcon.className).toBe("active-icon");
 
     });
 
     test("Then bills should be ordered from earliest to latest", () => {
       document.body.innerHTML = BillsUI({ data: bills })
-
       const dates = screen.getAllByText(/^(19|20)\d\d[- /.](0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])$/i).map(a => a.innerHTML);
-
       const antiChrono = (a, b) => ((a < b) ? 1 : -1);
-
       const datesSorted = [...dates].sort(antiChrono);
-
       expect(dates).toEqual(datesSorted);
     });
   });
@@ -134,6 +116,8 @@ describe("When i click on the icon eye", () => {
   describe("Set local storage item", () => {
     beforeEach(() => {
       window.localStorage.clear();
+    });
+    afterEach(() => {
       jest.clearAllMocks();
     });
 
@@ -165,11 +149,6 @@ describe("When i click on the icon eye", () => {
       window.localStorage
     });
     
-    // const iconEye = screen.getAllByTestId("icon-eye")[0];
-    // const handelShowBillReceipt = jest.fn(bill.handleClickIconEye(iconEye))
-    // iconEye.addEventListener("click", handelShowBillReceipt);
-    // userEvent.click(iconEye);
-
     const iconEye = screen.getAllByTestId("icon-eye");
     const handelShowBillReceipt = jest.fn((icon) => bill.handleClickIconEye(icon));
     if (iconEye) iconEye.forEach((icon) => {
@@ -178,7 +157,7 @@ describe("When i click on the icon eye", () => {
     });
 
     expect(handelShowBillReceipt).toHaveBeenCalled();
-    // expect(screen.getByTestId("invoicereceipt")).toBeTruthy()
+    expect(screen.getByTestId("invoicereceipt")).toBeTruthy()
     expect(screen.getByText("Justificatif")).toBeTruthy();
   });
 });
@@ -193,6 +172,9 @@ describe("When i click on new bill button", () => {
   describe("Set local storage item", () => {
     beforeEach(() => {
       window.localStorage.clear();
+    });
+    afterEach(() => {
+      jest.clearAllMocks();
     });
 
   test("Then new bill modal should be display", () => {
@@ -227,7 +209,6 @@ describe("When i click on new bill button", () => {
     const btnNewBill = screen.getByTestId("btn-new-bill");
 
     btnNewBill.addEventListener("click", handelShowNewBill);
-
     userEvent.click(btnNewBill);
 
     expect(handelShowNewBill).toHaveBeenCalled();
@@ -247,6 +228,8 @@ describe("Given im a user connected as Employee", () => {
   describe("Set local storage item", () => {
     beforeEach(() => {
       window.localStorage.clear();
+    });
+    afterEach(() => {
       jest.clearAllMocks();
     });
     
@@ -268,8 +251,6 @@ describe("Given im a user connected as Employee", () => {
       document.body.append(root);
       router();
       window.onNavigate(ROUTES_PATH.Bills);
-      // const onNavigate = (pathname) => {
-      // document.body.innerHTML = ROUTES({ pathname });
 
       const getStoreSpyOn = jest.spyOn(mockStore, "bills");
 
@@ -305,11 +286,8 @@ describe("Given im a user connected as Employee", () => {
         }})
 
       window.onNavigate(ROUTES_PATH.Bills);
-
       await new Promise(process.nextTick);
-
       const message = await screen.getByText(/Erreur 404/);
-
       expect(message).toBeTruthy();
     });
 
@@ -320,11 +298,8 @@ describe("Given im a user connected as Employee", () => {
         }});
 
       window.onNavigate(ROUTES_PATH.Bills)
-
       await new Promise(process.nextTick);
-
       const message = await screen.getByText(/Erreur 500/);
-
       expect(message).toBeTruthy()
     });
   });
