@@ -1,3 +1,22 @@
+Openclassrooms Projet 9 : Débuggez et testez un SaaS RH - Site Billed
+
+![banner](./src/assets/billedappbanner.png)
+
+Le contexte du projet : 
+
+Vous êtes développeur front-end chez Billed, une entreprise qui produit des solutions Saas destinées aux équipes de ressources humaines.
+
+Malheureusement pour Billed, Garance, une collègue de la feature team “note de frais” a quitté l’entreprise avant d’avoir terminé l’application. Dans deux semaines, l’équipe doit montrer la solution qui fonctionne à l’ensemble de l’entreprise. Matthieu, Lead Developer de la feature team a demandé à être aidé pour tenir les délais et vous avez appris hier lors de la réunion d’équipe que c’est vous qui avez été désigné !
+
+Le cahier des charges : 
+
+ - [Bug - report] : Fixer les bugs identifiés dans le rapport de bug fourni par Jest. 
+
+ - [Bug - hunt]  : Fixer les bugs identifiés par Leila sur le parcours employé.
+
+ - [Tests unitaires et d’intégration] : Ajouter des tests unitaires et d’intégration pour les fichiers Bills et NewBill. 
+
+ - [Test End-to-End] : Rédiger un plan de test End-to-End (E2E) sur le parcours employé
 
 ## L'architecture du projet :
 Ce projet, dit frontend, est connecté à un service API backend que vous devez aussi lancer en local.
